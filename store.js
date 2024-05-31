@@ -5,22 +5,21 @@ export default class Store {
         this.eventListeners = [];
     }
 
+    getState() {
+        return this.state;
+    }; 
 
- getState() {
-    return this.state;
-}; 
+    dispatch(action) {
+        this.state = this.tallyReducer(this.state, action);
+        this.eventListeners.forEach(eventListener => eventListener());
+    }
 
-dispatch(action) {
-    this.state = this.tallyReducer(this.state, action);
-    this.eventListeners.forEach(eventListener => eventListener());
-}
-
-subscribe(eventListener) {
-    this.eventListeners.push(eventListener);
-    return () => {
-        this.eventListeners = this.eventListeners.filter(listener => listener !== eventListener);
-    };
-}
+    subscribe(eventListener) {
+        this.eventListeners.push(eventListener);
+        return () => {
+            this.eventListeners = this.eventListeners.filter(listener => listener !== eventListener);
+         };
+    }
 };
 
 // Defining cotents for the types of actions
@@ -29,9 +28,9 @@ const DECREMENT = "DECREMENT";
 const RESET = "RESET";
 
 // Defining the action creators
-const increaseAction = () => ({type: 'INCREMENT'});
-const decreaseAction = () => ({type: 'DECREMENT'});
-const resetAction = () => ({type: 'RESET'})
+const increaseAction = () => ({type: INCREMENT});
+const decreaseAction = () => ({type: DECREMENT});
+const resetAction = () => ({type: RESET});
 
 // Reducer function that determines how the state of the application changes in response to an action sent to the store
 // switch statement has been used to handle the different types of actions
@@ -55,10 +54,5 @@ const initial = {tally: 0};
 const store = new Store(tallyReducer, initial)
 
 export {store, increaseAction, decreaseAction, resetAction};
-/* subscribers(eventListener) {
-    this.eventListeners.push(eventListener);
-    return () => {
-        this.eventListeners = this.eventListeners.filter(1 => 1 !== eventListener)
-    }
-} */
+
 
